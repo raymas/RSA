@@ -9,3 +9,4 @@ def generatePrime(size=4096):
 
     # TODO : check if prime
     # Naive or intelligent method ?
+    
