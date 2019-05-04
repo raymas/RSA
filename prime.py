@@ -11,7 +11,7 @@ def generatePrime(size=4096):
     return candidate
 
 
-def checkPrime(number):
+def checkPrimeFermat(number):
     a = 2
     if number == 1:
         return True
@@ -28,34 +28,27 @@ def checkPrime(number):
         return False
 
 
-n = generatePrime(10)
+def testPrime():
+    """Testing prime function"""
+    key_size = []
+    time_values = []
 
-# print(checkPrime(6))
-# print(checkPrime(11))
-# print(checkPrime(5))
-# print(checkPrime(3))
-# print(checkPrime(2))
-# print(checkPrime(97))
-#
-# print(checkPrime(1))
+    for taille in range(1, 30):
+        key_size.append(taille)
+        start = time.time()
+        isPrime = False
+        while isPrime is False:
+            n = generatePrime(taille)
+            isPrime = checkPrimeFermat(n)
+        totalTime = time.time() - start
+        time_values.append(totalTime)
 
-print(checkPrime(n))
+    plt.plot(key_size, time_values)
+    plt.legend("Fermat")
+    plt.xlabel("Key size in bits")
+    plt.ylabel("Check time in second")
+    plt.title("Comparaison of method")
+    plt.show()
 
-
-time_values = []
-for taille in range(1, 30):
-    print("Taille :" + str(taille))
-    start = time.time()
-    isPrime = False
-    while isPrime is False:
-        n = generatePrime(taille)
-        isPrime = checkPrime(n)
-        # print("Check if n is prime : " + str(n) + " result: " + str(isPrime))
-    totalTime = time.time() - start
-    time_values.append(totalTime)
-    print("Temps : " + str(totalTime) + " secondes")
-    print(n)
-
-
-plt.plot(time_values)
-plt.show()
+if __name__ == "__main__":
+    testPrime()
