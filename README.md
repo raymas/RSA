@@ -19,3 +19,9 @@ Specifications (TODO list) :
 This is a test
 
 If you have ideas, please complete this TODO list.
+
+## Fermat result
+
+Here is a small plot about the Fermat test computation speed.
+
+![Fermat plot speed evolution](fermat_result.png)
