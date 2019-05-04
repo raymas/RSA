@@ -5,7 +5,7 @@ A simple Python implementation of the RSA cipher.
 Specifications (TODO list) :
 
 - [ ] Key generation with correct entropy
-  - [ ] Naive
+  - [X] Naive
   - [ ] Optimized
   - [ ] Format of output keys
 
