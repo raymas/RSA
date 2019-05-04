@@ -24,4 +24,4 @@ If you have ideas, please complete this TODO list.
 
 Here is a small plot about the Fermat test computation speed.
 
-[Fermat plot speed evolution](fermat_result.png)
+![Fermat plot speed evolution](fermat_result.png)
