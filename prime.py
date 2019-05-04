@@ -28,13 +28,13 @@ def checkPrimeFermat(number):
     if number == 1:
         return True
     #print("la valeur de p : ", number)
-    while((a % number) == 0):
-        a += 1
+    while(pow(a, 1, number) == 0):
+        a = random.randint(2, number-1)
         #print("la valeur de a: ", a)
     fermat = pow(a, number) - a
     #print("la valeur de fermat : ", fermat)
     #print("divisibilite de fermat : ", fermat % number)
-    if (fermat % number) == 0:
+    if pow(fermat, 1, number) == 0:
         return True
     else:
         return False
@@ -45,9 +45,9 @@ def checkPrimeFermat(number):
 def testPrime():
     """Testing prime function"""
 
-    start_length = 1
+    start_length = 2
     end_length = 31
-    maxtime = 10
+    maxtime = 0
 
     key_size= []
     time_values = []
