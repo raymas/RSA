@@ -5,6 +5,8 @@ from multiprocessing import Process
 import time
 import math
 
+import os
+
 import matplotlib.pyplot as plt
 
 def generatePrime(size=4096):
@@ -43,11 +45,12 @@ def testPrime():
     """Testing prime function"""
 
     start_length = 1
-    end_length = 10
+    end_length = 9
 
     key_size= []
     time_values = []
 
+    isPrime = False
     print("Starting classical")
     for taille in range(start_length, end_length):
         key_size.append(taille)
@@ -62,6 +65,7 @@ def testPrime():
     key_size_fermat = []
     time_values_fermat = []
 
+    isPrime = False
     print("Starting Fermat")
     for taille in range(start_length, end_length):
         key_size_fermat.append(taille)
@@ -78,6 +82,7 @@ def testPrime():
     plt.xlabel("Key size in bits")
     plt.ylabel("Check time in second")
     plt.title("Comparaison of method")
+    plt.savefig(os.path.join(os.path.dirname(__file__), "speed.png"))
     plt.show()
 
 if __name__ == "__main__":
