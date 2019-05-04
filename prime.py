@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
+# Important modules for rsa key generation
 import random
 from multiprocessing import Process
 import time
 import math
 
+# for file location
 import os
 
+# for plot and data
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -40,58 +43,32 @@ def checkPrimeFermat(number):
         return False
 
 
+def _try_composite(a, d, n, s):
+    x = pow(a, d, n)
+    if x == 1:
+        return True
+    for i in range(s - 1):
+        if x == n - 1:
+            return True
+        x = pow(x, 2, n)
+    return x == n - 1
 
 
-def testPrime():
-    """Testing prime function"""
-
-    start_length = 2
-    end_length = 31
-    maxtime = 0
-
-    key_size= []
-    time_values = []
-
-    isPrime = False
-    print("Starting classical")
-    for taille in range(start_length, end_length):
-        key_size.append(taille)
-        start = time.time()
-        isPrime = False
-        print(taille)
-        while isPrime is False and time.time() - start < maxtime:
-            n = generatePrime(taille)
-            isPrime = checkPrime(n)
-        totalTime = time.time() - start
-        time_values.append(totalTime if totalTime < 10 else 200)
-
-    key_size_fermat = []
-    time_values_fermat = []
-
-    isPrime = False
-    print("Starting Fermat")
-    for taille in range(start_length, end_length):
-        key_size_fermat.append(taille)
-        start = time.time()
-        isPrime = False
-        print(taille)
-        while isPrime is False:
-            n = generatePrime(taille)
-            isPrime = checkPrimeFermat(n)
-        totalTime = time.time() - start
-        time_values_fermat.append(totalTime)
-
-    plt.plot(key_size, time_values, 'r', key_size_fermat, time_values_fermat, 'b')
-
-    classical_patch = mpatches.Patch(color='red', label='Classical')
-    fermat_patch = mpatches.Patch(color='blue', label='Fermat')
-    plt.legend(handles=[classical_patch, fermat_patch])
-
-    plt.xlabel("Key size in bits")
-    plt.ylabel("Check time in second")
-    plt.title("Comparaison of method")
-    plt.savefig(os.path.join(os.path.dirname(__file__), "speed.png"))
-    plt.show()
-
-if __name__ == "__main__":
-    testPrime()
+def checkRabinMiller(number, k=18):
+    if number in [1, 2, 3]:
+        return True
+    if not number & 1:
+        return False
+    
+    d, s = number - 1, 0
+    while d % 2 == 0:
+        # dividing by two using bitshift
+        d >>= 1
+        s += 1
+    
+    for i in range(k):
+        a = random.randint(2, number - 2)
+        if not _try_composite(a, d, number, s):
+            return False
+    
+    return True
