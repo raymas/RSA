@@ -2,18 +2,19 @@
 
 A simple Python implementation of the RSA cipher.
 
+
 Specifications (TODO list) :
 
 - [ ] Key generation with correct entropy
-- [ ] Naive
-- [ ] Optimized
-- [ ] Format of output keys
+  - [ ] Naive
+  - [ ] Optimized
+  - [ ] Format of output keys
 
 - [ ] Encryption/Decryption
-- [ ] Blocks
-- [ ] Optimized
-- [ ] Format of input
-- [ ] raw text
-- [ ] big files
+  - [ ] Blocks
+  - [ ] Optimized
+  - [ ] Format of input
+  - [ ] raw text
+  - [ ] big files
 
 If you have ideas, please complete this TODO list.

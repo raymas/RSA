@@ -12,6 +12,8 @@ class RSA(object):
 def main():
     print("Hello boys!")
 
+    print("Tchoa :")
+
 
 if __name__ == "__main__":
     main()
