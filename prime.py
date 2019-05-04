@@ -6,7 +6,7 @@ import time
 
 
 def generatePrime(size=4096):
-    candidate = random.randint(2**(size - 1), 2**(size))
+    candidate = random.randint(pow(2, size-1), pow(2, size))
     return candidate
 
 
