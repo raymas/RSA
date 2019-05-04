@@ -46,7 +46,7 @@ def testPrime():
     """Testing prime function"""
 
     start_length = 1
-    end_length = 30
+    end_length = 31
     maxtime = 10
 
     key_size= []
@@ -63,7 +63,7 @@ def testPrime():
             n = generatePrime(taille)
             isPrime = checkPrime(n)
         totalTime = time.time() - start
-        time_values.append(totalTime if totalTime != 10 else 10000)
+        time_values.append(totalTime if totalTime < 10 else 200)
 
     key_size_fermat = []
     time_values_fermat = []
