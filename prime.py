@@ -8,6 +8,7 @@ import math
 import os
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 def generatePrime(size=4096):
     candidate = random.randint(pow(2, size-1), pow(2, size))
@@ -45,7 +46,8 @@ def testPrime():
     """Testing prime function"""
 
     start_length = 1
-    end_length = 9
+    end_length = 30
+    maxtime = 10
 
     key_size= []
     time_values = []
@@ -56,11 +58,12 @@ def testPrime():
         key_size.append(taille)
         start = time.time()
         isPrime = False
-        while isPrime is False:
+        print(taille)
+        while isPrime is False and time.time() - start < maxtime:
             n = generatePrime(taille)
             isPrime = checkPrime(n)
         totalTime = time.time() - start
-        time_values.append(totalTime)
+        time_values.append(totalTime if totalTime != 10 else 10000)
 
     key_size_fermat = []
     time_values_fermat = []
@@ -71,14 +74,19 @@ def testPrime():
         key_size_fermat.append(taille)
         start = time.time()
         isPrime = False
+        print(taille)
         while isPrime is False:
             n = generatePrime(taille)
             isPrime = checkPrimeFermat(n)
         totalTime = time.time() - start
         time_values_fermat.append(totalTime)
 
-    plt.plot(key_size, time_values, key_size_fermat, time_values_fermat)
-    plt.legend("Naive sqrt/2 ", "Fermat")
+    plt.plot(key_size, time_values, 'r', key_size_fermat, time_values_fermat, 'b')
+
+    classical_patch = mpatches.Patch(color='red', label='Classical')
+    fermat_patch = mpatches.Patch(color='blue', label='Fermat')
+    plt.legend(handles=[classical_patch, fermat_patch])
+
     plt.xlabel("Key size in bits")
     plt.ylabel("Check time in second")
     plt.title("Comparaison of method")
