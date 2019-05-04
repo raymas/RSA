@@ -4,6 +4,7 @@ import random
 from multiprocessing import Process
 import time
 
+import matplotlib.pyplot as plt
 
 def generatePrime(size=4096):
     candidate = random.randint(pow(2, size-1), pow(2, size))
@@ -27,7 +28,7 @@ def checkPrime(number):
         return False
 
 
-n = 104729
+n = generatePrime(10)
 
 # print(checkPrime(6))
 # print(checkPrime(11))
@@ -41,15 +42,20 @@ n = 104729
 print(checkPrime(n))
 
 
-#
-# for taille in range(10, 60):
-#     print("Taille :" + str(taille))
-#     start = time.time()
-#     isPrime = False
-#     while isPrime is False:
-#         n = generatePrime(taille)
-#         isPrime = checkPrime(n)
-#         # print("Check if n is prime : " + str(n) + " result: " + str(isPrime))
-#
-#     print("Temps : " + str(time.time() - start) + " secondes")
-#     print(n)
+time_values = []
+for taille in range(1, 30):
+    print("Taille :" + str(taille))
+    start = time.time()
+    isPrime = False
+    while isPrime is False:
+        n = generatePrime(taille)
+        isPrime = checkPrime(n)
+        # print("Check if n is prime : " + str(n) + " result: " + str(isPrime))
+    totalTime = time.time() - start
+    time_values.append(totalTime)
+    print("Temps : " + str(totalTime) + " secondes")
+    print(n)
+
+
+plt.plot(time_values)
+plt.show()
