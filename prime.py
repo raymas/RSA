@@ -47,7 +47,7 @@ def _try_composite(a, d, n, s):
     x = pow(a, d, n)
     if x == 1:
         return True
-    for i in range(s - 1):
+    for _ in range(s - 1):
         if x == n - 1:
             return True
         x = pow(x, 2, n)
@@ -66,7 +66,7 @@ def checkRabinMiller(number, k=18):
         d >>= 1
         s += 1
     
-    for i in range(k):
+    for _ in range(k):
         a = random.randint(2, number - 2)
         if not _try_composite(a, d, number, s):
             return False
