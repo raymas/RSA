@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
-import prime
+import logging
+
+from prime import _getPrime
+from multiprocessing import Process, Pipe, cpu_count, Queue
+
 
 class RSA(object):
     """RSA main class"""
@@ -17,9 +21,42 @@ class RSA(object):
         # block size for encryption assuming 4096 / 8 which is 512 quite correct maybe a little too big
         self.blockSize = int(size / 8)
 
-    def getPrimes(self):
+        # logger to see what's going on
+        self.logger = logging.getLogger(__name__)
+
+    def getPrimes(self, numberOfKeys=2):
         # TODO: place our call to one of the function in prime
-        pass
+        numbers = []
+        for _ in range(2):
+            try :
+                processes = []
+                (pipe_recv, pipe_send) = Pipe(duplex=False)
+                nbOfJobs = int(cpu_count() / 2)
+                self.logger.debug("Prime generation | number of jobs {}".format(nbOfJobs))
+                print("Prime generation")
+
+                processes = [ Process(target=_getPrime, args=(pipe_send, 4096)) for _ in range(nbOfJobs) ]
+
+                for process in processes:
+                    process.daemon = True
+                    process.start()
+                self.logger.debug("Starting processes")
+                
+                numbers.append(pipe_recv.recv())
+
+                print("Hello")
+
+            finally:
+                pipe_recv.close()
+                pipe_send.close()
+
+
+                for process in processes:
+                    if process.is_alive():
+                        process.terminate()
+
+        (self.p, self.q) = numbers
+
 
     def getKeys(self):
         # Find e
@@ -40,10 +77,10 @@ class RSA(object):
         return ""
 
 def main():
-    print("Hello boys!")
+   rsa = RSA()
+   rsa.getPrimes()
 
-    print("Tchoa :")
-
+   print(rsa.p)
 
 if __name__ == "__main__":
     main()

@@ -2,7 +2,7 @@
 
 # Important modules for rsa key generation
 import random
-from multiprocessing import Process
+from multiprocessing import Pipe
 import time
 import math
 
@@ -72,3 +72,14 @@ def checkRabinMiller(number, k=18):
             return False
     
     return True
+
+
+def _getPrime(pipe, size=4096):
+    bPrimeFound = False
+    while not bPrimeFound:
+        candidate = generatePrime(size)
+        if (candidate & 1 != 0):
+            if checkPrimeFermat(candidate):
+                pipe.send(candidate)
+                bPrimeFound = True
+                break
