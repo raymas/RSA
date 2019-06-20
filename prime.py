@@ -45,16 +45,16 @@ def checkPrimeFermat(number):
 
 def _try_composite(a, d, n, s):
     x = pow(a, d, n)
-    if x == 1:
+    if x == 1 or x == n - 1:
         return True
     for _ in range(s - 1):
+        x = pow(x, 2, n)
         if x == n - 1:
             return True
-        x = pow(x, 2, n)
     return x == n - 1
 
 
-def checkRabinMiller(number, k=18):
+def checkRabinMiller(number, k=25):
     if number in [1, 2, 3]:
         return True
     if not number & 1:
