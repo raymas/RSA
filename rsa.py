@@ -8,15 +8,18 @@ from multiprocessing import Process, Pipe, cpu_count, Queue
 
 class RSA(object):
     """RSA main class"""
+
     def __init__(self, size=4096):
-        # prime number 
+        # prime number
         self.p, self.q = 2, 3
         # encryption key
         self.e = 0
         # decryption key
         self.d = 0
         # modulus
-        self.n = 0
+        self.n = self.p * self.q
+
+        self.phi = (self.p - 1) * (self.q - 1)
 
         # block size for encryption assuming 4096 / 8 which is 512 quite correct maybe a little too big
         self.blockSize = int(size / 8)
@@ -28,20 +31,22 @@ class RSA(object):
         # TODO: place our call to one of the function in prime
         numbers = []
         for _ in range(2):
-            try :
+            try:
                 processes = []
                 (pipe_recv, pipe_send) = Pipe(duplex=False)
                 nbOfJobs = int(cpu_count() / 2)
-                self.logger.debug("Prime generation | number of jobs {}".format(nbOfJobs))
+                self.logger.debug(
+                    "Prime generation | number of jobs {}".format(nbOfJobs))
                 print("Prime generation")
 
-                processes = [ Process(target=_getPrime, args=(pipe_send, 4096)) for _ in range(nbOfJobs) ]
+                processes = [Process(target=_getPrime, args=(
+                    pipe_send, 4096)) for _ in range(nbOfJobs)]
 
                 for process in processes:
                     process.daemon = True
                     process.start()
                 self.logger.debug("Starting processes")
-                
+
                 numbers.append(pipe_recv.recv())
 
                 print("Hello")
@@ -50,13 +55,11 @@ class RSA(object):
                 pipe_recv.close()
                 pipe_send.close()
 
-
                 for process in processes:
                     if process.is_alive():
                         process.terminate()
 
         (self.p, self.q) = numbers
-
 
     def getKeys(self):
         # Find e
@@ -76,11 +79,13 @@ class RSA(object):
         # look at PKSC5 or PKSC7
         return ""
 
+
 def main():
    rsa = RSA()
    rsa.getPrimes()
 
    print(rsa.p)
+
 
 if __name__ == "__main__":
     main()
