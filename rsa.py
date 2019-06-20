@@ -65,6 +65,11 @@ class RSA(object):
         while pgcde(self.e, self.phi)[0] != 1:
             self.e += 1
         print(self.e)
+        """
+        'd' à verifier
+        """
+        self.d = pgcde(self.e, self.phi)[1]
+        print(self.d)
         # Find e
         # Find d
         pass

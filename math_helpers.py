@@ -49,7 +49,7 @@ if __name__ == "__main__":
     finalTimeGCD = float("%.20f" % time.time()) - float(startGCD)
 
     startGCD2 = "%.20f" % time.time()
-    print(pgcde(120, 23))
+    print(pgcde(5, 64))
     finalTimeGCD2 = float("%.20f" % time.time()) - float(startGCD2)
     print(finalTimeGCD2)
 
