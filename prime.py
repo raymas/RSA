@@ -73,12 +73,16 @@ def checkRabinMiller(number, k=18):
     
     return True
 
-def _getPrime(pipe, size=4096):
+
+def _getPrime(pipe, size=2048):
     bPrimeFound = False
     while not bPrimeFound:
         candidate = generatePrime(size)
         if (candidate & 1 != 0):
-            if checkPrimeFermat(candidate):
+            if checkRabinMiller(candidate):
                 pipe.send(candidate)
                 bPrimeFound = True
-                break
+
+
+if __name__ == "__main__":
+    pass
