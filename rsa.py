@@ -8,6 +8,7 @@ from math_helpers import pgcde
 from prime import _getPrime
 from multiprocessing import Process, Pipe, cpu_count, Queue
 
+import base64
 
 class RSA(object):
     """RSA main class"""
@@ -23,7 +24,10 @@ class RSA(object):
         self.n = 0
 
         # block size for encryption assuming 4096 / 8 which is 512 quite correct maybe a little too big
-        self.blockSize = int(size / 8)
+        # as python handle byte more efficiently than bits we directly divide by 64
+        self.blockSize = int(size / (8*8))
+
+        self.size = size
 
         # logger to see what's going on
         self.logger = logging.getLogger(__name__)
@@ -40,7 +44,7 @@ class RSA(object):
                     "Prime generation | number of jobs {}".format(nbOfJobs))
 
                 processes = [Process(target=_getPrime, args=(
-                    pipe_send, 1024)) for _ in range(nbOfJobs)]
+                    pipe_send, self.size)) for _ in range(nbOfJobs)]
 
                 for process in processes:
                     process.daemon = True
@@ -76,41 +80,59 @@ class RSA(object):
         # Find d
         pass
 
-    def encrypt(self, buffer):
-        # handle byte stream
-        return [pow(m, self.e, self.n) for m in buffer]
+    def encrypt(self, m):
+        """handle hex stream"""
+        return pow(int(m, 16), self.e, self.n)
 
-    def decrypt(self, buffer):
-        # handle bit stream
-        return [pow(x, self.d, self.n) for x in buffer]
+    def decrypt(self, x):
+        """handle hex stream"""
+        return pow(int(x, 16), self.d, self.n)
 
-    def processBlock(self):
-        # TODO : compute encryption on one block
-        pass
+    def encryptBlock(self, blocks):
+        """compute encryption on one block must be async"""
+        return [self.encrypt(block) for block in blocks]
+
+    def decryptBlock(self, blocks):
+        """compute encryption on one block must be async"""
+        return [self.decrypt(block) for block in blocks]
 
     def splitBuffer(self, buffer):
-        # split a buffer via block size
-        return ""
+        """convert to ascii"""
+        hex_ascii = ''.join('%02x'%ord(i) for i in buffer)
+        
+        blocks = [hex_ascii[i:i+self.blockSize] for i in range(0, len(hex_ascii), self.blockSize)]
+        blocks[-1] = self.addPadding(blocks[-1])
 
-    def addPadding(self, method):
+        print(blocks)
+
+        return blocks
+
+    def addPadding(self, block, method="PKSC7"):
         # add padding to a block, this is not a block cipher but we need maleability you know
-        # look at PKSC5 or PKSC7
-        return ""
+        if method == "PKSC7":
+            deficit = (self.blockSize - len(block)) // 2
+            for _ in range(deficit):
+                block += '%02x'%deficit
+        return block
 
 
 def main():
-   rsa = RSA()
+   rsa = RSA(1024)
    rsa.getPrimes()
    rsa.getKeys()
+   
+   print("p={}\nq={}".format(rsa.p, rsa.q))
 
    text = "Hello world!"
-   bytestream = [ord(x) for x in text]
+   plain = rsa.splitBuffer(text)
 
-   a = (rsa.encrypt(bytestream))
-   b = rsa.decrypt(a)
-   print("".join([chr(i) for i in b]))
+   a = (rsa.encryptBlock(plain))
+   for i in a:
+       print(len(str(i)))
 
-   print("p={}\nq={}".format(rsa.p, rsa.q))
+   print("encrypted {} ".format(a))
+   #b = rsa.decrypt(a)
+   # print("".join([chr(i) for i in b]))
 
 
 if __name__ == "__main__":
