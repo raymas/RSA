@@ -76,11 +76,11 @@ class RSA(object):
 
     def encrypt(self, buffer):
         # handle byte stream
-        return buffer
+        return [pow(m, self.e, self.n) for m in buffer]
 
     def decrypt(self, buffer):
         # handle bit stream
-        return buffer
+        return [pow(x, self.d, self.n) for x in buffer]
 
     def processBlock(self):
         # TODO : compute encryption on one block
@@ -104,7 +104,9 @@ def main():
    text = "Hello world!"
    bytestream = [ord(x) for x in text]
 
-   rsa.encrypt(text)
+   a = (rsa.encrypt(bytestream))
+   b = rsa.decrypt(a)
+   print("".join([chr(i) for i in b]))
 
    print("p={}\nq={}".format(rsa.p, rsa.q))
 
