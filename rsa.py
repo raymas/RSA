@@ -74,6 +74,14 @@ class RSA(object):
         # Find d
         pass
 
+    def encrypt(self, buffer):
+        # handle byte stream
+        return buffer
+
+    def decrypt(self, buffer):
+        # handle bit stream
+        return buffer
+
     def processBlock(self):
         # TODO : compute encryption on one block
         pass
@@ -92,6 +100,11 @@ def main():
    rsa = RSA()
    rsa.getPrimes()
    rsa.getKeys()
+
+   text = "Hello world!"
+   bytestream = [ord(x) for x in text]
+
+   rsa.encrypt(text)
 
    print("p={}\nq={}".format(rsa.p, rsa.q))
 
