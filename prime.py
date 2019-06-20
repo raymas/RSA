@@ -74,7 +74,7 @@ def checkRabinMiller(number, k=25):
     return True
 
 
-def _getPrime(pipe, size=2048):
+def _getPrime(pipe, size=4096):
     bPrimeFound = False
     while not bPrimeFound:
         candidate = generatePrime(size)

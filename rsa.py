@@ -34,7 +34,7 @@ class RSA(object):
                 nbOfJobs = int(cpu_count())
                 self.logger.debug("Prime generation | number of jobs {}".format(nbOfJobs))
 
-                processes = [ Process(target=_getPrime, args=(pipe_send, 4096)) for _ in range(nbOfJobs) ]
+                processes = [ Process(target=_getPrime, args=(pipe_send, 1024)) for _ in range(nbOfJobs) ]
 
                 for process in processes:
                     process.daemon = True
