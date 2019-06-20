@@ -2,17 +2,19 @@
 
 import logging
 
+from math_helpers import pgcde
 from prime import _getPrime
 from multiprocessing import Process, Pipe, cpu_count, Queue
 
 
 class RSA(object):
     """RSA main class"""
+
     def __init__(self, size=4096):
-        # prime number 
+        # prime number
         self.p, self.q = 2, 3
         # encryption key
-        self.e = 0
+        self.e = 65537
         # decryption key
         self.d = 0
         # modulus
@@ -28,25 +30,26 @@ class RSA(object):
         # TODO: place our call to one of the function in prime
         numbers = []
         for _ in range(numberOfKeys):
-            try :
+            try:
                 processes = []
                 (pipe_recv, pipe_send) = Pipe(duplex=False)
                 nbOfJobs = int(cpu_count())
-                self.logger.debug("Prime generation | number of jobs {}".format(nbOfJobs))
+                self.logger.debug(
+                    "Prime generation | number of jobs {}".format(nbOfJobs))
 
-                processes = [ Process(target=_getPrime, args=(pipe_send, 1024)) for _ in range(nbOfJobs) ]
+                processes = [Process(target=_getPrime, args=(
+                    pipe_send, 1024)) for _ in range(nbOfJobs)]
 
                 for process in processes:
                     process.daemon = True
                     process.start()
                 self.logger.debug("Starting processes")
-                
+
                 numbers.append(pipe_recv.recv())
 
             finally:
                 pipe_recv.close()
                 pipe_send.close()
-
 
                 for process in processes:
                     if process.is_alive():
@@ -54,10 +57,14 @@ class RSA(object):
 
         (self.p, self.q) = numbers
 
-
     def getKeys(self):
-        self.n      = self.p * self.q
-        self.phi    = (self.p - 1) * (self.q - 1)
+        print(self.e)
+        self.n = self.p * self.q
+        self.phi = (self.p - 1) * (self.q - 1)
+
+        while pgcde(self.e, self.phi)[0] != 1:
+            self.e += 1
+        print(self.e)
         # Find e
         # Find d
         pass
@@ -75,11 +82,14 @@ class RSA(object):
         # look at PKSC5 or PKSC7
         return ""
 
+
 def main():
    rsa = RSA()
    rsa.getPrimes()
+   rsa.getKeys()
 
    print("p={}\nq={}".format(rsa.p, rsa.q))
+
 
 if __name__ == "__main__":
     main()

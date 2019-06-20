@@ -49,8 +49,9 @@ if __name__ == "__main__":
     finalTimeGCD = float("%.20f" % time.time()) - float(startGCD)
 
     startGCD2 = "%.20f" % time.time()
-    # print(extended_gcd2(120, 23))
+    print(pgcde(120, 23))
     finalTimeGCD2 = float("%.20f" % time.time()) - float(startGCD2)
+    print(finalTimeGCD2)
 
     y_pos = [0, 1]
     performance = [finalTimeGCD, finalTimeGCD2]
