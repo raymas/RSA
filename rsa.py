@@ -17,9 +17,7 @@ class RSA(object):
         # decryption key
         self.d = 0
         # modulus
-        self.n = self.p * self.q
-
-        self.phi = (self.p - 1) * (self.q - 1)
+        self.n = 0
 
         # block size for encryption assuming 4096 / 8 which is 512 quite correct maybe a little too big
         self.blockSize = int(size / 8)
@@ -62,6 +60,8 @@ class RSA(object):
         (self.p, self.q) = numbers
 
     def getKeys(self):
+        self.n      = self.p * self.q
+        self.phi    = (self.p - 1) * (self.q - 1)
         # Find e
         # Find d
         pass
