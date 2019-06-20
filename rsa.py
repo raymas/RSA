@@ -2,6 +2,8 @@
 
 import logging
 
+import math
+
 from math_helpers import pgcde
 from prime import _getPrime
 from multiprocessing import Process, Pipe, cpu_count, Queue
@@ -68,7 +70,7 @@ class RSA(object):
         """
         'd' à verifier
         """
-        self.d = pgcde(self.e, self.phi)[1]
+        self.d = (self.phi + (pgcde(self.e, self.phi)[1])) % self.phi
         print(self.d)
         # Find e
         # Find d
