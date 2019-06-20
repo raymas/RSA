@@ -16,23 +16,13 @@ def extended_gcd(x, y):
         return (v, u - (x // y) * v)
 
 
-def extended_gcd2(x, y):
-    """iterative"""
-    (u0, v0, u1, v1) = (1, 0, 0, 1)
-    while y:
-        (q, r) = divmod(x, y)
-        (x, y) = (y, r)
-        (u0, v0, u1, v1) = (u1, v1, u0-q*u1, v0-q*v1)
-        return (u0, v0)
-
-
 if __name__ == "__main__":
     startGCD = "%.20f" % time.time()
     print(extended_gcd(120, 23))
     finalTimeGCD = float("%.20f" % time.time()) - float(startGCD)
 
     startGCD2 = "%.20f" % time.time()
-    print(extended_gcd(120, 23))
+    # print(extended_gcd2(120, 23))
     finalTimeGCD2 = float("%.20f" % time.time()) - float(startGCD2)
 
     y_pos       = [0, 1]
