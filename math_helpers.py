@@ -17,7 +17,7 @@ def extended_gcd2(x, y):
     (u0, v0, u1, v1) = (1, 0, 0, 1)
     while y:
         (q, r) = divmod(x, y)
-        (x, y) = (y, x)
+        (x, y) = (y, r)
         (u0, v0, u1, v1) = (u1, v1, u0-q*u1, v0-q*v1)
         return (u0, v0)
 
