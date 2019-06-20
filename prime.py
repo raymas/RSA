@@ -2,7 +2,7 @@
 
 # Important modules for rsa key generation
 import random
-from multiprocessing import Process
+from multiprocessing import Pipe
 import time
 import math
 
@@ -13,10 +13,10 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-
 def generatePrime(size=4096):
     candidate = random.randint(pow(2, size-1), pow(2, size))
     return candidate
+
 
 
 def checkPrime(number):
@@ -59,16 +59,27 @@ def checkRabinMiller(number, k=18):
         return True
     if not number & 1:
         return False
-
+    
     d, s = number - 1, 0
     while d % 2 == 0:
         # dividing by two using bitshift
         d >>= 1
         s += 1
-
+    
     for _ in range(k):
         a = random.randint(2, number - 2)
         if not _try_composite(a, d, number, s):
             return False
-
+    
     return True
+
+
+def _getPrime(pipe, size=4096):
+    bPrimeFound = False
+    while not bPrimeFound:
+        candidate = generatePrime(size)
+        if (candidate & 1 != 0):
+            if checkPrimeFermat(candidate):
+                pipe.send(candidate)
+                bPrimeFound = True
+                break
